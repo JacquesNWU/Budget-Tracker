@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Budget Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div id="app" class="p-6">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-white mb-2">Family Budget Tracker</h1>
+                <p class="text-slate-400">Manage your household finances together</p>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-green-100 text-sm font-medium">Total Income</p>
+                            <p id="totalIncome" class="text-3xl font-bold text-white mt-2">R0.00</p>
+                        </div>
+                        <svg class="text-white opacity-80" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                            <polyline points="17 6 23 6 23 12"></polyline>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-red-100 text-sm font-medium">Total Expenses</p>
+                            <p id="totalExpenses" class="text-3xl font-bold text-white mt-2">R0.00</p>
+                        </div>
+                        <svg class="text-white opacity-80" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+                            <polyline points="17 18 23 18 23 12"></polyline>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-orange-100 text-sm font-medium">Paid So Far</p>
+                            <p id="paidExpenses" class="text-3xl font-bold text-white mt-2">R0.00</p>
+                        </div>
+                        <svg class="text-white opacity-80" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-blue-100 text-sm font-medium">Remaining</p>
+                            <p id="remaining" class="text-3xl font-bold text-white mt-2">R0.00</p>
+                        </div>
+                        <svg class="text-white opacity-80" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add New Item Form -->
+            <div class="bg-slate-800 rounded-xl p-6 mb-6 shadow-lg border border-slate-700">
+                <h2 class="text-xl font-bold text-white mb-4">Add New Item</h2>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <input type="text" id="description" placeholder="Description" class="px-4 py-2 bg-slate-700 text-white rounded-lg border border-slate-600 focus:border-blue-500 focus:outline-none">
+                    <input type="number" id="amount" placeholder="Amount" step="0.01" class="px-4 py-2 bg-slate-700 text-white rounded-lg border border-slate-600 focus:border-blue-500 focus:outline-none">
+                    <select id="type" class="px-4 py-2 bg-slate-700 text-white rounded-lg border border-slate-600 focus:border-blue-500 focus:outline-none">
+                        <option value="expense">Expense</option>
+                        <option value="income">Income</option>
+                    </select>
+                    <select id="paidBy" class="px-4 py-2 bg-slate-700 text-white rounded-lg border border-slate-600 focus:border-blue-500 focus:outline-none">
+                        <option value="Husband">Husband</option>
+                        <option value="Wife">Wife</option>
+                        <option value="Both">Both</option>
+                    </select>
+                    <button onclick="addItem()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add
+                    </button>
+                </div>
+            </div>
+
+            <!-- Items List -->
+            <div class="bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-700">
+                <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                    <h2 class="text-xl font-bold text-white">Budget Items</h2>
+                    <div class="flex gap-2">
+                        <button onclick="exportToCSV()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Export CSV
+                        </button>
+                        <button onclick="resetMonth()" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            Reset Month
+                        </button>
+                        <button onclick="clearAll()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            Clear All
+                        </button>
+                    </div>
+                </div>
+
+                <div id="itemsContainer" class="overflow-x-auto">
+                    <p class="text-slate-400 text-center py-8">No items added yet. Start by adding your income and expenses above.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let items = [];
+
+        // Load items from localStorage on page load
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('budgetItems');
+            if (saved) {
+                items = JSON.parse(saved);
+                renderItems();
+                updateTotals();
+            }
+        });
+
+        function saveItems() {
+            localStorage.setItem('budgetItems', JSON.stringify(items));
+        }
+
+        function addItem() {
+            const description = document.getElementById('description').value.trim();
+            const amount = parseFloat(document.getElementById('amount').value);
+            const type = document.getElementById('type').value;
+            const paidBy = document.getElementById('paidBy').value;
+
+            if (!description || !amount || isNaN(amount)) {
+                alert('Please fill in description and amount');
+                return;
+            }
+
+            items.push({
+                id: Date.now(),
+                description,
+                amount,
+                type,
+                paidBy,
+                isPaid: false
+            });
+
+            document.getElementById('description').value = '';
+            document.getElementById('amount').value = '';
+            
+            saveItems();
+            renderItems();
+            updateTotals();
+        }
+
+        function deleteItem(id) {
+            items = items.filter(item => item.id !== id);
+            saveItems();
+            renderItems();
+            updateTotals();
+        }
+
+        function togglePaid(id) {
+            items = items.map(item => 
+                item.id === id ? { ...item, isPaid: !item.isPaid } : item
+            );
+            saveItems();
+            renderItems();
+            updateTotals();
+        }
+
+        function resetMonth() {
+            if (confirm('Reset all items for the new month? This will clear all paid statuses.')) {
+                items = items.map(item => ({ ...item, isPaid: false }));
+                saveItems();
+                renderItems();
+                updateTotals();
+            }
+        }
+
+        function clearAll() {
+            if (confirm('Clear all items? This cannot be undone.')) {
+                items = [];
+                saveItems();
+                renderItems();
+                updateTotals();
+            }
+        }
+
+        function exportToCSV() {
+            const headers = ['Description', 'Amount (R)', 'Type', 'Paid By', 'Status'];
+            const csvData = items.map(item => [
+                item.description,
+                item.amount.toFixed(2),
+                item.type,
+                item.paidBy,
+                item.type === 'expense' ? (item.isPaid ? 'Paid' : 'Unpaid') : 'N/A'
+            ]);
+
+            const totals = calculateTotals();
+            const csvContent = [
+                headers.join(','),
+                ...csvData.map(row => row.map(cell => `"${cell}"`).join(',')),
+                '',
+                `Total Income,R${totals.totalIncome.toFixed(2)}`,
+                `Total Expenses,R${totals.totalExpenses.toFixed(2)}`,
+                `Paid So Far,R${totals.paidExpenses.toFixed(2)}`,
+                `Remaining,R${totals.remaining.toFixed(2)}`
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            const date = new Date().toISOString().split('T')[0];
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `budget_export_${date}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function calculateTotals() {
+            const totalIncome = items
+                .filter(item => item.type === 'income')
+                .reduce((sum, item) => sum + item.amount, 0);
+
+            const totalExpenses = items
+                .filter(item => item.type === 'expense')
+                .reduce((sum, item) => sum + item.amount, 0);
+
+            const paidExpenses = items
+                .filter(item => item.type === 'expense' && item.isPaid)
+                .reduce((sum, item) => sum + item.amount, 0);
+
+            const remaining = totalIncome - paidExpenses;
+
+            return { totalIncome, totalExpenses, paidExpenses, remaining };
+        }
+
+        function updateTotals() {
+            const totals = calculateTotals();
+            document.getElementById('totalIncome').textContent = `R${totals.totalIncome.toFixed(2)}`;
+            document.getElementById('totalExpenses').textContent = `R${totals.totalExpenses.toFixed(2)}`;
+            document.getElementById('paidExpenses').textContent = `R${totals.paidExpenses.toFixed(2)}`;
+            document.getElementById('remaining').textContent = `R${totals.remaining.toFixed(2)}`;
+        }
+
+        function renderItems() {
+            const container = document.getElementById('itemsContainer');
+            
+            if (items.length === 0) {
+                container.innerHTML = '<p class="text-slate-400 text-center py-8">No items added yet. Start by adding your income and expenses above.</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-slate-700">
+                            <th class="text-left py-3 px-4 text-slate-300 font-medium">Description</th>
+                            <th class="text-right py-3 px-4 text-slate-300 font-medium">Amount</th>
+                            <th class="text-center py-3 px-4 text-slate-300 font-medium">Type</th>
+                            <th class="text-center py-3 px-4 text-slate-300 font-medium">Paid By</th>
+                            <th class="text-center py-3 px-4 text-slate-300 font-medium">Status</th>
+                            <th class="text-center py-3 px-4 text-slate-300 font-medium">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${items.map(item => `
+                            <tr class="border-b border-slate-700 hover:bg-slate-750">
+                                <td class="py-3 px-4 text-white">${item.description}</td>
+                                <td class="py-3 px-4 text-right font-semibold ${item.type === 'income' ? 'text-green-400' : 'text-red-400'}">
+                                    R${item.amount.toFixed(2)}
+                                </td>
+                                <td class="py-3 px-4 text-center">
+                                    <span class="px-3 py-1 rounded-full text-xs font-medium ${item.type === 'income' ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'}">
+                                        ${item.type}
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4 text-center text-slate-300">${item.paidBy}</td>
+                                <td class="py-3 px-4 text-center">
+                                    ${item.type === 'expense' ? `
+                                        <button onclick="togglePaid(${item.id})" class="px-3 py-1 rounded-full text-xs font-medium transition-colors ${item.isPaid ? 'bg-green-900 text-green-300 hover:bg-green-800' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}">
+                                            ${item.isPaid ? 'Paid' : 'Unpaid'}
+                                        </button>
+                                    ` : ''}
+                                </td>
+                                <td class="py-3 px-4 text-center">
+                                    <button onclick="deleteItem(${item.id})" class="text-red-400 hover:text-red-300 transition-colors">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Allow adding item with Enter key
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && (e.target.id === 'description' || e.target.id === 'amount')) {
+                addItem();
+            }
+        });
+    </script>
+</body>
+</html>
