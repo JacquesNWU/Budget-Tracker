@@ -71,8 +71,7 @@ budget-tracker/
 ├── main.js            # Electron main process
 ├── package.json       # Project configuration and dependencies
 ├── README.md          # This file
-├── LICENSE            # License information
-└── screenshots/       # Application screenshots (optional)
+└── LICENSE            # License information
 ```
 
 ## Technologies Used
@@ -108,7 +107,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you encounter any issues or have questions:
 - Open an [Issue](https://github.com/yourusername/budget-tracker/issues)
-- Email: your.email@example.com
+- Email: jvanheerden38@gmail.com
 
 ## Roadmap
 
